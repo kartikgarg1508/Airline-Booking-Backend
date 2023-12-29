@@ -51,3 +51,15 @@ Coming inside the `src` folder we have the following folders:
   ```
   npm start
   ```
+
+- Go to `src` folder and execute the following command to create the database:
+
+  ```
+  npx sequelize db:create
+  ```
+
+- Then to create the table Airplane execute
+
+  ```
+  npx sequelize model:create --name Airplane --attributes ModelNumber:string,Capacity:integer
+  ```
