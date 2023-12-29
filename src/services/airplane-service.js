@@ -14,9 +14,12 @@ async function createAirplane(data) {
       error.errors.forEach((element) => {
         explanation.push(element.message);
       });
-      throw new AppError(explanation, StatusCodes.INTERNAL_SERVER_ERROR);
+      throw new AppError(explanation, StatusCodes.BAD_REQUEST);
     }
-    throw error;
+    throw new AppError(
+      "Cannot create a new airplane",
+      StatusCodes.INTERNAL_SERVER_ERROR
+    );
   }
 }
 
