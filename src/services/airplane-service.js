@@ -40,8 +40,9 @@ async function getAirplane(id) {
     const airplane = await airlinerepository.get(id);
     return airplane;
   } catch (error) {
-    if (error.statusCode === StatusCodes.NOT_FOUND)
+    if (error.statusCode === StatusCodes.NOT_FOUND) {
       throw new AppError("No Airplane with given id found", error.statusCode);
+    }
 
     throw new AppError(
       "Cannot fetch the data of all the requested airplane",
@@ -55,14 +56,41 @@ async function deleteAirplane(id) {
     const response = await airlinerepository.destroy(id);
     return response;
   } catch (error) {
-    if (error.statusCode === StatusCodes.NOT_FOUND)
+    if (error.statusCode === StatusCodes.NOT_FOUND) {
       throw new AppError(
         "The requested airplane to be deleted does not exist",
         error.statusCode
       );
+    }
 
     throw new AppError(
       "Cannot delete the requested airplane",
+      StatusCodes.INTERNAL_SERVER_ERROR
+    );
+  }
+}
+
+async function updateAirplane(id, data) {
+  try {
+    const response = await airlinerepository.update(id, data);
+    return response;
+  } catch (error) {
+    if (error.statusCode === StatusCodes.NOT_FOUND) {
+      throw new AppError(
+        "The requested airplane to be modified does not exist",
+        error.statusCode
+      );
+    }
+    if (error.name == "SequelizeValidationError") {
+      let explanation = [];
+      error.errors.forEach((element) => {
+        explanation.push(element.message);
+      });
+      throw new AppError(explanation, StatusCodes.BAD_REQUEST);
+    }
+
+    throw new AppError(
+      "Cannot update the requested airplane",
       StatusCodes.INTERNAL_SERVER_ERROR
     );
   }
@@ -73,4 +101,5 @@ module.exports = {
   getAirplanes,
   getAirplane,
   deleteAirplane,
+  updateAirplane,
 };

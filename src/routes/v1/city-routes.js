@@ -25,6 +25,6 @@ router.get("/", CityController.getCities);
 DELETE : /api/v1/cities/:name
 */
 
-router.delete("/:id", CityController.deleteCity);
+router.delete("/:name", CityController.deleteCity);
 
 module.exports = router;

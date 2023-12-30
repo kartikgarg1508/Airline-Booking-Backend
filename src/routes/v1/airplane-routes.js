@@ -33,4 +33,15 @@ DELETE : /api/v1/airplane/:id
 
 router.delete("/:id", AirplaneController.deleteAirplane);
 
+/*
+PATCH : /api/v1/airplane/:id
+req-body {capacity : integer<=1000}
+*/
+
+router.patch(
+  "/:id",
+  AirplanMiddlewares.validateUpdateRequest,
+  AirplaneController.updateAirplane
+);
+
 module.exports = router;
