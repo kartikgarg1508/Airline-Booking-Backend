@@ -38,9 +38,9 @@ async function getCities() {
   }
 }
 
-async function deleteCity(name) {
+async function deleteCity(id) {
   try {
-    const response = await cityrepository.destroy(name);
+    const response = await cityrepository.destroy(id);
     return response;
   } catch (error) {
     if (error.statusCode === StatusCodes.NOT_FOUND)
@@ -56,8 +56,38 @@ async function deleteCity(name) {
   }
 }
 
+async function updateCity(id, data) {
+  try {
+    const response = await cityrepository.update(id, data);
+    return response;
+  } catch (error) {
+    if (
+      error.name == "SequelizeValidationError" ||
+      error.name == "SequelizeUniqueConstraintError"
+    ) {
+      let explanation = [];
+      error.errors.forEach((element) => {
+        explanation.push(element.message);
+      });
+      throw new AppError(explanation, StatusCodes.BAD_REQUEST);
+    }
+    if (error.statusCode === StatusCodes.NOT_FOUND) {
+      throw new AppError(
+        "The requested city id to be modified does not exist",
+        error.statusCode
+      );
+    }
+
+    throw new AppError(
+      "Cannot update the name of the requested city id",
+      StatusCodes.INTERNAL_SERVER_ERROR
+    );
+  }
+}
+
 module.exports = {
   createCity,
   getCities,
   deleteCity,
+  updateCity,
 };

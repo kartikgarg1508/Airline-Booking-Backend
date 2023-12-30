@@ -72,8 +72,8 @@ async function updateAirplane(req, res) {
     const data = {
       Capacity: req.body.capacity,
     };
-    const response = await AirplaneService.updateAirplane(req.params.id, data);
-    SuccessResponse.data = response;
+    const airplane = await AirplaneService.updateAirplane(req.params.id, data);
+    SuccessResponse.data = airplane;
     return res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (error) {
     ErrorResponse.error = error;

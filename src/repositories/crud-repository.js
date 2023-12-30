@@ -45,17 +45,22 @@ class CrudRepository {
   async update(id, data) {
     // data : { col1 : value, ...}
 
-    // to check whether the given id exists or not and to handle validation errors seperately
-    // because otherwise update just returns [0] wether id not found or data validaton fails
-
-    const response = await this.get(id);
-    const updatedAirplane = await this.model.update(data, {
+    const response = await this.model.update(data, {
       where: {
         id: id,
       },
     });
 
-    return updatedAirplane;
+    // if id not found :
+
+    if (response[0] == 0) {
+      throw new AppError(
+        "The resource you requested was not found",
+        StatusCodes.NOT_FOUND
+      );
+    }
+
+    return response;
   }
 }
 

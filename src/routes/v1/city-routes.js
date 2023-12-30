@@ -25,6 +25,17 @@ router.get("/", CityController.getCities);
 DELETE : /api/v1/cities/:name
 */
 
-router.delete("/:name", CityController.deleteCity);
+router.delete("/:id", CityController.deleteCity);
+
+/*
+PATCH : /api/v1/cities/:id
+req-body {cityname: string}
+*/
+
+router.patch(
+  "/:id",
+  CityMiddlewares.validateUpdateRequest,
+  CityController.updateCity
+);
 
 module.exports = router;
