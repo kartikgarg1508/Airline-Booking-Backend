@@ -5,7 +5,7 @@ const { AirplaneController } = require("../../controllers");
 const { AirplanMiddlewares } = require("../../middlewares");
 
 /*
-POST : /api/v1/airplane
+POST : /api/v1/airplanes
 req-body {modelNumber: alphanumeric, capacity : integer<=1000}
 */
 
@@ -16,25 +16,25 @@ router.post(
 );
 
 /*
-GET : /api/v1/airplane
+GET : /api/v1/airplanes
 */
 
 router.get("/", AirplaneController.getAirplanes);
 
 /*
-GET : /api/v1/airplane/:id
+GET : /api/v1/airplanes/:id
 */
 
 router.get("/:id", AirplaneController.getAirplane);
 
 /*
-DELETE : /api/v1/airplane/:id
+DELETE : /api/v1/airplanes/:id
 */
 
 router.delete("/:id", AirplaneController.deleteAirplane);
 
 /*
-PATCH : /api/v1/airplane/:id
+PATCH : /api/v1/airplanes/:id
 req-body {capacity : integer<=1000}
 */
 
