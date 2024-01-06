@@ -6,7 +6,17 @@ const { FlightMiddleware } = require("../../middlewares");
 
 /*
 POST : /api/v1/flights
-req-body {modelNumber: alphanumeric, capacity : integer<=1000}
+req-body {
+  airlines: Indigo
+  flightnumber: 6E2009,
+  airplaneId: 5,
+  arrivalAirportCode: DEL,
+  departureAirportCode: BOM,
+  arrivalTime: 2024-01-06 12:00:00
+  departureTime: 2024-01-06 09:30:00,
+  price: 4000,
+  boardingGate: 1A (optional)
+}
 */
 
 router.post(
@@ -17,8 +27,15 @@ router.post(
 
 /*
 GET : /api/v1/airplanes
+query params optional: {
+  trips: (departure-arrival) DEL-BLR,
+  price: (minPrice-maxPrice) 5000-10000 or minPrice(5000) or nothing
+  traveller: 2
+  tripDate: 2024-01-10
+  sort: price_ASC,departureTime_ASC etc.
+}
 */
 
-router.get("/", FlightController.getFlights);
+router.get("/", FlightController.getAllFlights);
 
 module.exports = router;
