@@ -15,7 +15,7 @@ module.exports = {
       references: {
         //Required field
         table: "Cities",
-        field: "id",s
+        field: "id",
       },
       onDelete: "cascade",
       onUpdate: "cascade",
