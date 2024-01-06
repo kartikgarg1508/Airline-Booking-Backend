@@ -96,10 +96,29 @@ async function updateAirplane(id, data) {
   }
 }
 
+async function getCapacity(id) {
+  try {
+    const capacity = await airlinerepository.getCapacity(id);
+    return capacity[0].dataValues.Capacity;
+  } catch (error) {
+    if (error.statusCode == StatusCodes.NOT_FOUND) {
+      throw new AppError(
+        "No Airplane with given airplaneId exists",
+        StatusCodes.NOT_FOUND
+      );
+    }
+    throw new AppError(
+      "Cannot fetch the capacity of the requested airplane",
+      StatusCodes.INTERNAL_SERVER_ERROR
+    );
+  }
+}
+
 module.exports = {
   createAirplane,
   getAirplanes,
   getAirplane,
   deleteAirplane,
   updateAirplane,
+  getCapacity,
 };

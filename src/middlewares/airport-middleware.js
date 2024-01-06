@@ -3,7 +3,6 @@ const { ErrorResponse } = require("../utils/common");
 const { AppError } = require("../utils/errors");
 
 function validateCreateRequest(req, res, next) {
-  console.log(req.body);
   if (req.body.name && req.body.code && req.body.cityId) {
     next();
   } else {
