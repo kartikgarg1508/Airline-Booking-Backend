@@ -3,51 +3,43 @@ const { ErrorResponse } = require("../utils/common");
 const { AppError } = require("../utils/errors");
 
 function validateCreateRequest(req, res, next) {
-  if (!req.body.name) {
+  console.log(req.body);
+  if (req.body.name && req.body.code && req.body.cityId) {
+    next();
+  } else {
     ErrorResponse.message = "Something went wrong while creating the airport";
-    ErrorResponse.error = new AppError(
-      ["Name of Airport not found in the incoming request"],
-      StatusCodes.BAD_REQUEST
-    );
+    let explanation = [];
+
+    if (!req.body.name)
+      explanation.push("Name of Airport not found in the incoming request");
+
+    if (!req.body.code)
+      explanation.push("Code of Airport not found in the incoming request");
+
+    if (!req.body.cityId)
+      explanation.push("CityId of Airport not found in the incoming request");
+
+    ErrorResponse.error = new AppError(explanation, StatusCodes.BAD_REQUEST);
     return res.status(ErrorResponse.error.statusCode).json(ErrorResponse);
   }
-  if (!req.body.code) {
-    ErrorResponse.message = "Something went wrong while creating the airport";
-    ErrorResponse.error = new AppError(
-      ["Code of Airport not found in the incoming request"],
-      StatusCodes.BAD_REQUEST
-    );
-    return res.status(ErrorResponse.error.statusCode).json(ErrorResponse);
-  }
-  if (!req.body.cityId) {
-    ErrorResponse.message = "Something went wrong while creating the airport";
-    ErrorResponse.error = new AppError(
-      ["CityId of Airport not found in the incoming request"],
-      StatusCodes.BAD_REQUEST
-    );
-    return res.status(ErrorResponse.error.statusCode).json(ErrorResponse);
-  }
-  next();
 }
 
 function validateUpdateRequest(req, res, next) {
-  if (!req.body.name) {
+  if (req.body.name && req.body.code) {
+    next();
+  } else {
     ErrorResponse.message = "Something went wrong while updating the airport";
-    ErrorResponse.error = new AppError(
-      ["Name of airport not found in the incoming request"],
-      StatusCodes.BAD_REQUEST
-    );
+    let explanation = [];
+
+    if (!req.body.name)
+      explanation.push("Name of Airport not found in the incoming request");
+
+    if (!req.body.code)
+      explanation.push("Code of Airport not found in the incoming request");
+
+    ErrorResponse.error = new AppError(explanation, StatusCodes.BAD_REQUEST);
     return res.status(ErrorResponse.error.statusCode).json(ErrorResponse);
   }
-  if (!req.body.code) {
-    ErrorResponse.message = "Something went wrong while updating the airport";
-    ErrorResponse.error = new AppError(
-      ["Code of airport not found in the incoming request"],
-      StatusCodes.BAD_REQUEST
-    );
-    return res.status(ErrorResponse.error.statusCode).json(ErrorResponse);
-  }
-  next();
 }
 
 module.exports = {
