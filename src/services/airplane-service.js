@@ -1,12 +1,12 @@
-const { AirlineRepository } = require("../repositories");
+const { AirplaneRepository } = require("../repositories");
 const { AppError } = require("../utils/errors");
 const { StatusCodes } = require("http-status-codes");
 
-const airlinerepository = new AirlineRepository();
+const airplanerepository = new AirplaneRepository();
 
 async function createAirplane(data) {
   try {
-    const airplane = await airlinerepository.create(data);
+    const airplane = await airplanerepository.create(data);
     return airplane;
   } catch (error) {
     if (error.name == "SequelizeValidationError") {
@@ -25,7 +25,7 @@ async function createAirplane(data) {
 
 async function getAirplanes() {
   try {
-    const airplanes = await airlinerepository.getAll();
+    const airplanes = await airplanerepository.getAll();
     return airplanes;
   } catch (error) {
     throw new AppError(
@@ -37,7 +37,7 @@ async function getAirplanes() {
 
 async function getAirplane(id) {
   try {
-    const airplane = await airlinerepository.get(id);
+    const airplane = await airplanerepository.get(id);
     return airplane;
   } catch (error) {
     if (error.statusCode === StatusCodes.NOT_FOUND) {
@@ -53,7 +53,7 @@ async function getAirplane(id) {
 
 async function deleteAirplane(id) {
   try {
-    const response = await airlinerepository.destroy(id);
+    const response = await airplanerepository.destroy(id);
     return response;
   } catch (error) {
     if (error.statusCode === StatusCodes.NOT_FOUND) {
@@ -72,7 +72,7 @@ async function deleteAirplane(id) {
 
 async function updateAirplane(id, data) {
   try {
-    const response = await airlinerepository.update(id, data);
+    const response = await airplanerepository.update(id, data);
     return response;
   } catch (error) {
     if (error.statusCode === StatusCodes.NOT_FOUND) {
@@ -98,7 +98,7 @@ async function updateAirplane(id, data) {
 
 async function getCapacity(id) {
   try {
-    const capacity = await airlinerepository.getCapacity(id);
+    const capacity = await airplanerepository.getCapacity(id);
     return capacity[0].dataValues.Capacity;
   } catch (error) {
     if (error.statusCode == StatusCodes.NOT_FOUND) {
