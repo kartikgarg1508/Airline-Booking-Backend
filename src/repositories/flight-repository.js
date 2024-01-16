@@ -1,8 +1,10 @@
 const CrudRepository = require("./crud-repository");
 const { Flight, Airplane, Airport, City } = require("../models");
+const db = require("../models");
 const { Sequelize } = require("sequelize");
 const { AppError } = require("../utils/errors");
 const { StatusCodes } = require("http-status-codes");
+const { acquireRowLockonFlights } = require("./raw-queries");
 
 class FlightRepository extends CrudRepository {
   constructor() {
@@ -73,6 +75,8 @@ class FlightRepository extends CrudRepository {
 
       if (!flight)
         throw new AppError("Resource not found", StatusCodes.NOT_FOUND);
+
+      await db.sequelize.query(acquireRowLockonFlights(flightId));
 
       if (Number(decrease) === 1) {
         if (flight.totalAvailableSeats >= noOfSeats) {
