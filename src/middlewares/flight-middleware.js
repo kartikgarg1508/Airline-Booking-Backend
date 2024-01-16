@@ -53,6 +53,25 @@ function validateCreateRequest(req, res, next) {
   }
 }
 
+function validateSeatUpdateRequest(req, res, next) {
+  if (req.body.noOfSeats) {
+    next();
+  } else {
+    ErrorResponse.message =
+      "Something went wrong while updating the available seats of the flight";
+    let explanation = [];
+
+    if (!req.body.noOfSeats)
+      explanation.push(
+        "Number of Seats (noOfSeats) not found in the incoming request"
+      );
+
+    ErrorResponse.error = new AppError(explanation, StatusCodes.BAD_REQUEST);
+    return res.status(ErrorResponse.error.statusCode).json(ErrorResponse);
+  }
+}
+
 module.exports = {
   validateCreateRequest,
+  validateSeatUpdateRequest,
 };

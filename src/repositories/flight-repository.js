@@ -1,6 +1,8 @@
 const CrudRepository = require("./crud-repository");
 const { Flight, Airplane, Airport, City } = require("../models");
 const { Sequelize } = require("sequelize");
+const { AppError } = require("../utils/errors");
+const { StatusCodes } = require("http-status-codes");
 
 class FlightRepository extends CrudRepository {
   constructor() {
@@ -63,6 +65,37 @@ class FlightRepository extends CrudRepository {
       ],
     });
     return response;
+  }
+
+  async updateAvailableSeats(flightId, noOfSeats, decrease = true) {
+    try {
+      const flight = await Flight.findByPk(flightId);
+
+      if (!flight)
+        throw new AppError("Resource not found", StatusCodes.NOT_FOUND);
+
+      if (Number(decrease) === 1) {
+        if (flight.totalAvailableSeats >= noOfSeats) {
+          await flight.decrement("totalAvailableSeats", {
+            by: noOfSeats,
+          });
+        } else {
+          throw new AppError(
+            "Enough Seats not present",
+            StatusCodes.BAD_REQUEST
+          );
+        }
+      } else {
+        await flight.increment("totalAvailableSeats", {
+          by: noOfSeats,
+        });
+      }
+
+      await flight.reload();
+      return flight;
+    } catch (error) {
+      throw error;
+    }
   }
 }
 

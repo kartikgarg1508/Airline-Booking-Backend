@@ -26,7 +26,7 @@ router.post(
 );
 
 /*
-GET : /api/v1/airplanes
+GET : /api/v1/flights
 query params optional: {
   trips: (departure-arrival) DEL-BLR,
   price: (minPrice-maxPrice) 5000-10000 or minPrice(5000) or nothing
@@ -37,5 +37,27 @@ query params optional: {
 */
 
 router.get("/", FlightController.getAllFlights);
+
+/*
+GET : /api/v1/flights/:id
+req-body: {}
+*/
+
+router.get("/:id", FlightController.getFlight);
+
+/*
+PATCH : /api/v1/flights/:id/seats
+req-body {
+  flightId: 1
+  noOfSeats: 5
+  decrease: 0 (pass this if you want to increment the seats)
+}
+*/
+
+router.patch(
+  "/:id/seats",
+  FlightMiddleware.validateSeatUpdateRequest,
+  FlightController.updateAvailableSeats
+);
 
 module.exports = router;

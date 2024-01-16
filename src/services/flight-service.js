@@ -117,7 +117,52 @@ async function getAllFlights(queryParams) {
   }
 }
 
+async function getFlight(id) {
+  try {
+    const airport = await flightrepository.get(id);
+    return airport;
+  } catch (error) {
+    if (error.statusCode === StatusCodes.NOT_FOUND) {
+      throw new AppError("No Flight with given id found", error.statusCode);
+    }
+    throw new AppError(
+      "Cannot fetch the data of the airport",
+      StatusCodes.INTERNAL_SERVER_ERROR
+    );
+  }
+}
+
+async function updateAvailableSeats(data) {
+  try {
+    const flight = await flightrepository.updateAvailableSeats(
+      data.flightId,
+      data.noOfSeats,
+      data.decrease
+    );
+    return flight;
+  } catch (error) {
+    if (error.statusCode === StatusCodes.NOT_FOUND) {
+      throw new AppError(
+        "There is no flight with given flightId",
+        error.statusCode
+      );
+    }
+    if (error.statusCode === StatusCodes.BAD_REQUEST) {
+      throw new AppError(
+        "The flight does not have enough available seats",
+        error.statusCode
+      );
+    }
+    throw new AppError(
+      "Cannot update Available Seats of the flight",
+      StatusCodes.INTERNAL_SERVER_ERROR
+    );
+  }
+}
+
 module.exports = {
   createFlight,
   getAllFlights,
+  getFlight,
+  updateAvailableSeats,
 };
