@@ -70,6 +70,7 @@ class FlightRepository extends CrudRepository {
   }
 
   async updateAvailableSeats(flightId, noOfSeats, decrease = true) {
+    const transaction = await db.sequelize.transaction();
     try {
       const flight = await Flight.findByPk(flightId);
 
@@ -80,9 +81,13 @@ class FlightRepository extends CrudRepository {
 
       if (Number(decrease) === 1) {
         if (flight.totalAvailableSeats >= noOfSeats) {
-          await flight.decrement("totalAvailableSeats", {
-            by: noOfSeats,
-          });
+          await flight.decrement(
+            "totalAvailableSeats",
+            {
+              by: noOfSeats,
+            },
+            { transaction: transaction }
+          );
         } else {
           throw new AppError(
             "Enough Seats not present",
@@ -90,14 +95,20 @@ class FlightRepository extends CrudRepository {
           );
         }
       } else {
-        await flight.increment("totalAvailableSeats", {
-          by: noOfSeats,
-        });
+        await flight.increment(
+          "totalAvailableSeats",
+          {
+            by: noOfSeats,
+          },
+          { transaction: transaction }
+        );
       }
 
       await flight.reload();
+      await transaction.commit();
       return flight;
     } catch (error) {
+      await transaction.rollback();
       throw error;
     }
   }
